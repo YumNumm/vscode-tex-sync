@@ -1,5 +1,7 @@
 # TeX Sync
 
+> **Note:** I have no intention of maintaining this extension. If it doesn't work for you, fork it and do whatever you like ♡
+
 A VS Code extension that keeps the PDF in sync with your cursor while you write LaTeX.
 It reads the SyncTeX "sourcemap" (`.synctex.gz`) produced by the TeX engine and drives
 the PDF viewer of [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop).
