@@ -1,0 +1,202 @@
+{
+  "name": "tex-sync",
+  "displayName": "TeX Sync",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Keep the PDF in sync with your cursor via SyncTeX. Works on top of LaTeX Workshop.",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "latex",
+    "latex-workshop",
+    "pdf",
+    "synctex",
+    "tex"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YumNumm/vscode-tex-sync"
+  },
+  "publisher": "YumNumm",
+  "main": "./dist/extension.cjs",
+  "scripts": {
+    "build": "vp pack",
+    "watch": "vp pack --watch",
+    "check": "vp check",
+    "lint": "vp lint",
+    "fmt": "vp fmt",
+    "test": "vp test",
+    "typecheck": "tsc --noEmit",
+    "package": "vsce package --no-dependencies",
+    "vscode:prepublish": "vp pack"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/vscode": "1.115.0",
+    "@vscode/vsce": "^4.1.0",
+    "typescript": "^7.0.2",
+    "vite-plus": "1.5.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "texSync.toggleFollow",
+        "title": "Toggle Cursor Follow",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.toggleAutoOpenPdf",
+        "title": "Toggle Auto-open PDF",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.toggleHighlightChanges",
+        "title": "Toggle Highlight Changes After Build",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.syncNow",
+        "title": "Sync PDF to Cursor Now",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.openPdf",
+        "title": "Open PDF Beside",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.reload",
+        "title": "Reload SyncTeX Data",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.showMenu",
+        "title": "Show Menu",
+        "category": "TeX Sync"
+      },
+      {
+        "command": "texSync.showLog",
+        "title": "Show Log",
+        "category": "TeX Sync"
+      }
+    ],
+    "configuration": {
+      "title": "TeX Sync",
+      "properties": {
+        "texSync.follow.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically move the PDF viewer to the cursor position (forward SyncTeX) as the cursor moves."
+        },
+        "texSync.follow.debounceMs": {
+          "type": "number",
+          "default": 150,
+          "minimum": 0,
+          "description": "Delay in milliseconds after the last cursor movement before syncing."
+        },
+        "texSync.follow.triggerKinds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "keyboard",
+              "mouse",
+              "command",
+              "programmatic"
+            ]
+          },
+          "default": [
+            "keyboard",
+            "mouse"
+          ],
+          "description": "Which kinds of selection changes trigger a sync. 'programmatic' includes changes made by other extensions (e.g. LaTeX Workshop inverse search) and is off by default to avoid feedback loops."
+        },
+        "texSync.follow.syncWhileTyping": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also sync when the cursor moves because of text edits. Off by default because the SyncTeX data is stale until the next build."
+        },
+        "texSync.follow.skipUnchangedPosition": {
+          "type": "boolean",
+          "default": true,
+          "description": "Do not call the viewer when the resolved PDF position is the same as last time (reduces viewer jitter)."
+        },
+        "texSync.follow.positionTolerance": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "description": "Vertical distance in PDF points under which two resolved positions are considered the same."
+        },
+        "texSync.autoOpenPdf.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "When a TeX document becomes active, open its PDF in the editor group beside it (if not already open). The PDF is opened at most once per session so closing it is respected."
+        },
+        "texSync.autoOpenPdf.delayMs": {
+          "type": "number",
+          "default": 300,
+          "minimum": 0,
+          "description": "Delay in milliseconds before auto-opening the PDF after a TeX document becomes active."
+        },
+        "texSync.highlightChanges.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "After a rebuild, flash the lines that changed since the previous build in the PDF (uses LaTeX Workshop's rectangle SyncTeX indicator, so 'latex-workshop.synctex.indicator' must be 'rectangle')."
+        },
+        "texSync.highlightChanges.maxLines": {
+          "type": "number",
+          "default": 20,
+          "minimum": 1,
+          "description": "Maximum number of changed lines to flash per build."
+        },
+        "texSync.highlightChanges.delayMs": {
+          "type": "number",
+          "default": 800,
+          "minimum": 0,
+          "description": "Delay after the SyncTeX file changes before flashing, to let the viewer reload the new PDF."
+        },
+        "texSync.highlightChanges.scrollToChange": {
+          "type": "boolean",
+          "default": true,
+          "description": "Leave the viewer at the (last) changed location. When off, the viewer is moved back to the cursor position after flashing."
+        },
+        "texSync.statusBar.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the TeX Sync status bar item."
+        },
+        "texSync.synctex.include": {
+          "type": "string",
+          "default": "**/*.synctex{,.gz}",
+          "description": "Glob used to discover SyncTeX files in the workspace."
+        },
+        "texSync.synctex.exclude": {
+          "type": "string",
+          "default": "**/node_modules/**",
+          "description": "Glob of paths to ignore when discovering SyncTeX files."
+        }
+      }
+    }
+  },
+  "activationEvents": [
+    "onLanguage:jlweave",
+    "onLanguage:latex",
+    "onLanguage:latex-expl3",
+    "onLanguage:pweave",
+    "onLanguage:rsweave"
+  ],
+  "extensionDependencies": [
+    "James-Yu.latex-workshop"
+  ],
+  "engines": {
+    "node": ">=24",
+    "vscode": "^1.115.0"
+  },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@vscode/vsce-sign"
+    ]
+  }
+}

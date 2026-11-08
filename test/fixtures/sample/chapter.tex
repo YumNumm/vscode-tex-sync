@@ -1,0 +1,14 @@
+\section{Chapter}
+\label{sec:chapter}
+This paragraph is the first line of the included file.
+
+\newcount\fillerCount
+\fillerCount=0
+\loop
+  \advance\fillerCount by 1
+  Filler paragraph number \the\fillerCount. The quick brown fox jumps over the lazy dog
+  while the SyncTeX records keep track of every line.\par
+  \ifnum\fillerCount<60
+\repeat
+
+Final paragraph of the chapter, after the loop.

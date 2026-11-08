@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.vsix
+.DS_Store
+
+# LaTeX build artifacts inside test fixtures (keep *.synctex.gz)
+test/fixtures/**/*.pdf
+test/fixtures/**/*.aux
+test/fixtures/**/*.log
+test/fixtures/**/*.fls
+test/fixtures/**/*.fdb_latexmk
+test/fixtures/**/*.out
