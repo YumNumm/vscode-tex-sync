@@ -1,0 +1,6 @@
+# Only install package versions published at least 7 days ago (value is in minutes).
+minimumReleaseAge: 10080
+
+# @vscode/vsce-sign's postinstall is not needed for `vsce package`.
+allowBuilds:
+  '@vscode/vsce-sign': false

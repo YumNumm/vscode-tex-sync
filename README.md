@@ -65,30 +65,30 @@ LaTeX Workshop のビューアで PDF を開きます。各 PDF はセッショ�
 
 ## コマンド
 
-| コマンド                           | 説明                                                   |
-| ---------------------------------- | ------------------------------------------------------ |
-| `TeX Sync: Toggle Cursor Follow`   | 自動 forward search のオン/オフ                        |
-| `TeX Sync: Toggle Auto-open PDF`   | TeX ファイルの隣に PDF を開く機能のオン/オフ           |
-| `TeX Sync: Sync PDF to Cursor Now` | 重複除去を無視して 1 回だけ forward search を実行      |
-| `TeX Sync: Open PDF Beside`        | アクティブなドキュメントの PDF を隣のグループで開く    |
-| `TeX Sync: Reload SyncTeX Data`    | 解析済みキャッシュを破棄してファイルを再読み込み       |
-| `TeX Sync: Show Menu` / `Show Log` | ステータスバーのメニュー / 出力チャンネル              |
+| コマンド                           | 説明                                                |
+| ---------------------------------- | --------------------------------------------------- |
+| `TeX Sync: Toggle Cursor Follow`   | 自動 forward search のオン/オフ                     |
+| `TeX Sync: Toggle Auto-open PDF`   | TeX ファイルの隣に PDF を開く機能のオン/オフ        |
+| `TeX Sync: Sync PDF to Cursor Now` | 重複除去を無視して 1 回だけ forward search を実行   |
+| `TeX Sync: Open PDF Beside`        | アクティブなドキュメントの PDF を隣のグループで開く |
+| `TeX Sync: Reload SyncTeX Data`    | 解析済みキャッシュを破棄してファイルを再読み込み    |
+| `TeX Sync: Show Menu` / `Show Log` | ステータスバーのメニュー / 出力チャンネル           |
 
 ## 設定
 
-| 設定                                   | デフォルト             | 説明                                                                       |
-| -------------------------------------- | ---------------------- | -------------------------------------------------------------------------- |
-| `texSync.follow.enabled`               | `true`                 | カーソル移動時に自動 forward search                                        |
-| `texSync.follow.debounceMs`            | `150`                  | 最後のカーソル移動からの遅延                                               |
-| `texSync.follow.triggerKinds`          | `["keyboard","mouse"]` | 同期のトリガーとなる選択変更の種類(`command`、`programmatic` も指定可)   |
-| `texSync.follow.syncWhileTyping`       | `false`                | 編集によるカーソル移動でも同期する                                         |
-| `texSync.follow.skipUnchangedPosition` | `true`                 | 解決された位置が変わらないときはビューア呼び出しをスキップ                 |
-| `texSync.follow.positionTolerance`     | `2`                    | 「変わらない」とみなす縦方向の許容差(PDF ポイント)                       |
-| `texSync.autoOpenPdf.enabled`          | `true`                 | TeX ドキュメントの隣に PDF を開く                                          |
-| `texSync.autoOpenPdf.delayMs`          | `300`                  | 自動オープンまでの遅延                                                     |
-| `texSync.statusBar.enabled`            | `true`                 | ステータスバー項目を表示                                                   |
-| `texSync.synctex.include`              | `**/*.synctex{,.gz}`   | SyncTeX ファイルを探す glob                                                |
-| `texSync.synctex.exclude`              | `**/node_modules/**`   | 無視する glob                                                              |
+| 設定                                   | デフォルト             | 説明                                                                   |
+| -------------------------------------- | ---------------------- | ---------------------------------------------------------------------- |
+| `texSync.follow.enabled`               | `true`                 | カーソル移動時に自動 forward search                                    |
+| `texSync.follow.debounceMs`            | `150`                  | 最後のカーソル移動からの遅延                                           |
+| `texSync.follow.triggerKinds`          | `["keyboard","mouse"]` | 同期のトリガーとなる選択変更の種類(`command`、`programmatic` も指定可) |
+| `texSync.follow.syncWhileTyping`       | `false`                | 編集によるカーソル移動でも同期する                                     |
+| `texSync.follow.skipUnchangedPosition` | `true`                 | 解決された位置が変わらないときはビューア呼び出しをスキップ             |
+| `texSync.follow.positionTolerance`     | `2`                    | 「変わらない」とみなす縦方向の許容差(PDF ポイント)                     |
+| `texSync.autoOpenPdf.enabled`          | `true`                 | TeX ドキュメントの隣に PDF を開く                                      |
+| `texSync.autoOpenPdf.delayMs`          | `300`                  | 自動オープンまでの遅延                                                 |
+| `texSync.statusBar.enabled`            | `true`                 | ステータスバー項目を表示                                               |
+| `texSync.synctex.include`              | `**/*.synctex{,.gz}`   | SyncTeX ファイルを探す glob                                            |
+| `texSync.synctex.exclude`              | `**/node_modules/**`   | 無視する glob                                                          |
 
 ## 仕組み
 
