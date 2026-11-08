@@ -1,126 +1,124 @@
 # TeX Sync
 
-> **Note:** I have no intention of maintaining this extension. If it doesn't work for you, fork it and do whatever you like ♡
+日本語 | [English](README.en.md)
 
-A VS Code extension that keeps the PDF in sync with your cursor while you write LaTeX.
-It reads the SyncTeX "sourcemap" (`.synctex.gz`) produced by the TeX engine and drives
-the PDF viewer of [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop).
+> **Note:** この拡張機能をメンテナンスするつもりはありません。動かなかったら Fork して好きにしてね♡
 
-## Features
+LaTeX を書いている間、PDF をカーソル位置に追従させる VS Code 拡張機能です。
+TeX エンジンが出力する SyncTeX の「ソースマップ」(`.synctex.gz`)を読み取り、
+[LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) の PDF ビューアを操作します。
 
-All three features can be switched on and off independently, from settings, the command palette,
-or the status bar menu.
+## 機能
 
-### Cursor follow (`texSync.follow.enabled`)
+3 つの機能はそれぞれ独立して、設定・コマンドパレット・ステータスバーのメニューから
+オン/オフを切り替えられます。
 
-Every time the cursor moves in a TeX editor (debounced), the PDF viewer jumps to the
-corresponding position — forward SyncTeX without pressing a key.
+### カーソル追従(`texSync.follow.enabled`)
 
-The extension parses the `.synctex(.gz)` file itself and uses it to avoid useless viewer
-calls:
+TeX エディタでカーソルが動くたびに(デバウンス付き)、PDF ビューアが対応する位置へジャンプします。
+キーを押さなくても forward SyncTeX が走るイメージです。
 
-- lines without a SyncTeX record (preamble, comments, macros) don't trigger a jump,
-- if the resolved PDF position is the same as last time, the viewer is left alone,
-- cursor moves caused by typing are ignored by default, because the SyncTeX data is stale
-  until the next build (`texSync.follow.syncWhileTyping`),
-- selection changes made programmatically — including LaTeX Workshop's own inverse search
-  (Ctrl/Cmd+click in the PDF) — are ignored by default, so there is no feedback loop
-  (`texSync.follow.triggerKinds`).
+拡張機能自身が `.synctex(.gz)` を解析し、無駄なビューア呼び出しを避けます。
 
-### Auto-open PDF (`texSync.autoOpenPdf.enabled`)
+- SyncTeX のレコードがない行(プリアンブル、コメント、マクロ)ではジャンプしません。
+- 解決された PDF 上の位置が前回と同じなら、ビューアには触れません。
+- タイピングによるカーソル移動はデフォルトで無視します。次のビルドまで SyncTeX のデータが
+  古いままだからです(`texSync.follow.syncWhileTyping`)。
+- プログラムによる選択変更(LaTeX Workshop 自身の逆検索、つまり PDF 上の Ctrl/Cmd+クリックを含む)は
+  デフォルトで無視するため、フィードバックループは起きません(`texSync.follow.triggerKinds`)。
 
-When a TeX document becomes active and its PDF exists, the PDF is opened in LaTeX
-Workshop's viewer in the editor group beside it. Each PDF is opened at most once per
-session, so a viewer tab you closed stays closed. Use **TeX Sync: Open PDF Beside** to
-open it again explicitly.
+### PDF の自動オープン(`texSync.autoOpenPdf.enabled`)
 
-### Highlight changes after build (`texSync.highlightChanges.enabled`)
+TeX ドキュメントがアクティブになり、対応する PDF が存在する場合、隣のエディタグループに
+LaTeX Workshop のビューアで PDF を開きます。各 PDF はセッションごとに最大 1 回しか開かないので、
+閉じたビューアタブは閉じたままです。もう一度開きたいときは **TeX Sync: Open PDF Beside** を
+明示的に実行してください。
 
-When the `.synctex.gz` is rewritten by a build, the lines that changed since the previous
-build are flashed in the PDF: a translucent blue box over each changed line that fades out
-in about a second. The flash is LaTeX Workshop's "rectangle" SyncTeX indicator, so
-`latex-workshop.synctex.indicator` must be left at its default `rectangle`.
+### ビルド後の変更箇所ハイライト(`texSync.highlightChanges.enabled`)
 
-- The diff is taken between the sources of the previous build and this one (snapshots are
-  taken on save), so only inserted or modified lines are flashed; deletions have nothing to
-  point at.
-- Lines without a SyncTeX record (preamble, macro definitions, Lua code) are skipped.
-- At most `texSync.highlightChanges.maxLines` lines are flashed. The viewer ends up at the
-  last changed location; set `texSync.highlightChanges.scrollToChange` to `false` to return
-  it to the cursor position instead.
-- The first build seen in a session only records a snapshot and flashes nothing.
+ビルドによって `.synctex.gz` が書き換えられると、前回のビルドから変更された行が PDF 上で点滅します。
+変更行ごとに半透明の青い枠が表示され、1 秒ほどでフェードアウトします。この表示は LaTeX Workshop の
+「rectangle」SyncTeX インジケータを利用しているため、`latex-workshop.synctex.indicator` は
+デフォルトの `rectangle` のままにしておく必要があります。
 
-### Status bar
+- 差分は前回ビルド時と今回ビルド時のソース(保存時にスナップショットを取得)の間で取ります。
+  そのため点滅するのは挿入・変更された行のみで、削除は指す先がないため対象外です。
+- SyncTeX のレコードがない行(プリアンブル、マクロ定義、Lua コード)はスキップします。
+- 点滅する行数は最大 `texSync.highlightChanges.maxLines` 行です。ビューアは最後の変更箇所に
+  留まります。カーソル位置に戻したい場合は `texSync.highlightChanges.scrollToChange` を `false` に
+  してください。
+- セッション中に最初に検知したビルドではスナップショットを記録するだけで、何も点滅しません。
 
-`$(eye) TeX Sync p.3` shows the page the cursor maps to. Click it for a menu with the two
-toggles, "sync now", "open PDF beside", "reload SyncTeX data", the log and the settings.
+### ステータスバー
 
-## Requirements
+`$(eye) TeX Sync p.3` のように、カーソルが対応するページを表示します。クリックすると、各機能のトグル、
+「今すぐ同期」、「隣に PDF を開く」、「SyncTeX データの再読み込み」、ログ、設定を含むメニューが開きます。
+
+## 必要なもの
 
 - [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)
-  (declared as an extension dependency; it owns building and the PDF viewer).
-- Build with SyncTeX enabled (`-synctex=1`, which LaTeX Workshop's default recipes do).
+  (拡張機能の依存関係として宣言しています。ビルドと PDF ビューアは LaTeX Workshop が担当します)
+- SyncTeX を有効にしたビルド(`-synctex=1`。LaTeX Workshop のデフォルトレシピは有効になっています)
 
-This extension does not build your document. It only reads the `.synctex(.gz)` and `.pdf`
-produced by your existing workflow and watches them for changes.
+この拡張機能はドキュメントのビルドを行いません。既存のワークフローが出力する `.synctex(.gz)` と `.pdf` を
+読み取り、変更を監視するだけです。
 
-## Commands
+## コマンド
 
-| Command                            | Description                                                 |
-| ---------------------------------- | ----------------------------------------------------------- |
-| `TeX Sync: Toggle Cursor Follow`   | Turn automatic forward search on/off                        |
-| `TeX Sync: Toggle Auto-open PDF`   | Turn opening the PDF beside TeX files on/off                |
-| `TeX Sync: Sync PDF to Cursor Now` | One-shot forward search, ignoring de-duplication            |
-| `TeX Sync: Open PDF Beside`        | Open the PDF for the active document in the group beside it |
-| `TeX Sync: Reload SyncTeX Data`    | Drop the parsed cache and re-read the files                 |
-| `TeX Sync: Show Menu` / `Show Log` | Status bar menu / output channel                            |
+| コマンド                           | 説明                                                   |
+| ---------------------------------- | ------------------------------------------------------ |
+| `TeX Sync: Toggle Cursor Follow`   | 自動 forward search のオン/オフ                        |
+| `TeX Sync: Toggle Auto-open PDF`   | TeX ファイルの隣に PDF を開く機能のオン/オフ           |
+| `TeX Sync: Sync PDF to Cursor Now` | 重複除去を無視して 1 回だけ forward search を実行      |
+| `TeX Sync: Open PDF Beside`        | アクティブなドキュメントの PDF を隣のグループで開く    |
+| `TeX Sync: Reload SyncTeX Data`    | 解析済みキャッシュを破棄してファイルを再読み込み       |
+| `TeX Sync: Show Menu` / `Show Log` | ステータスバーのメニュー / 出力チャンネル              |
 
-## Settings
+## 設定
 
-| Setting                                | Default                | Description                                                                  |
-| -------------------------------------- | ---------------------- | ---------------------------------------------------------------------------- |
-| `texSync.follow.enabled`               | `true`                 | Automatic forward search on cursor move                                      |
-| `texSync.follow.debounceMs`            | `150`                  | Delay after the last cursor move                                             |
-| `texSync.follow.triggerKinds`          | `["keyboard","mouse"]` | Which selection changes trigger a sync (`command`, `programmatic` available) |
-| `texSync.follow.syncWhileTyping`       | `false`                | Also sync on cursor moves caused by edits                                    |
-| `texSync.follow.skipUnchangedPosition` | `true`                 | Skip the viewer call when the resolved position is unchanged                 |
-| `texSync.follow.positionTolerance`     | `2`                    | Vertical tolerance (PDF points) for "unchanged"                              |
-| `texSync.autoOpenPdf.enabled`          | `true`                 | Open the PDF beside TeX documents                                            |
-| `texSync.autoOpenPdf.delayMs`          | `300`                  | Delay before auto-opening                                                    |
-| `texSync.statusBar.enabled`            | `true`                 | Show the status bar item                                                     |
-| `texSync.synctex.include`              | `**/*.synctex{,.gz}`   | Glob to discover SyncTeX files                                               |
-| `texSync.synctex.exclude`              | `**/node_modules/**`   | Glob to ignore                                                               |
+| 設定                                   | デフォルト             | 説明                                                                       |
+| -------------------------------------- | ---------------------- | -------------------------------------------------------------------------- |
+| `texSync.follow.enabled`               | `true`                 | カーソル移動時に自動 forward search                                        |
+| `texSync.follow.debounceMs`            | `150`                  | 最後のカーソル移動からの遅延                                               |
+| `texSync.follow.triggerKinds`          | `["keyboard","mouse"]` | 同期のトリガーとなる選択変更の種類(`command`、`programmatic` も指定可)   |
+| `texSync.follow.syncWhileTyping`       | `false`                | 編集によるカーソル移動でも同期する                                         |
+| `texSync.follow.skipUnchangedPosition` | `true`                 | 解決された位置が変わらないときはビューア呼び出しをスキップ                 |
+| `texSync.follow.positionTolerance`     | `2`                    | 「変わらない」とみなす縦方向の許容差(PDF ポイント)                       |
+| `texSync.autoOpenPdf.enabled`          | `true`                 | TeX ドキュメントの隣に PDF を開く                                          |
+| `texSync.autoOpenPdf.delayMs`          | `300`                  | 自動オープンまでの遅延                                                     |
+| `texSync.statusBar.enabled`            | `true`                 | ステータスバー項目を表示                                                   |
+| `texSync.synctex.include`              | `**/*.synctex{,.gz}`   | SyncTeX ファイルを探す glob                                                |
+| `texSync.synctex.exclude`              | `**/node_modules/**`   | 無視する glob                                                              |
 
-## How it works
+## 仕組み
 
-1. SyncTeX files are discovered in the workspace (and next to the open document) and parsed
-   into a `(file, line) → (page, x, y)` table. Input paths are resolved against the SyncTeX
-   directory and its parents, so `-outdir` builds work too.
-2. On cursor move, the current line is looked up (nearest mapped line wins; ties go to the
-   following line).
-3. If the target is new, `latex-workshop.synctexto` is invoked with the line and file, and
-   LaTeX Workshop moves its viewer.
-4. A file watcher invalidates the cache whenever the `.synctex(.gz)` is rebuilt.
+1. ワークスペース内(および開いているドキュメントの隣)の SyncTeX ファイルを検出し、
+   `(file, line) → (page, x, y)` のテーブルに解析します。入力パスは SyncTeX ファイルのディレクトリと
+   その親ディレクトリを基準に解決するため、`-outdir` を使ったビルドでも動作します。
+2. カーソル移動時に現在行を検索します(最も近いマップ済みの行を採用し、同距離なら後ろの行を優先)。
+3. 移動先が新しい位置であれば、行とファイルを指定して `latex-workshop.synctexto` を呼び出し、
+   LaTeX Workshop がビューアを移動させます。
+4. `.synctex(.gz)` が再ビルドされるたびに、ファイルウォッチャーがキャッシュを無効化します。
 
-## Development
+## 開発
 
-Tooling: [mise](https://mise.jdx.dev) (Node LTS + pnpm) and [Vite+](https://viteplus.dev)
-(`vp pack` → tsdown bundle, `vp test` → Vitest, `vp check` → Oxfmt + Oxlint + type check).
+ツール: [mise](https://mise.jdx.dev)(Node LTS + pnpm)と [Vite+](https://viteplus.dev)
+(`vp pack` → tsdown バンドル、`vp test` → Vitest、`vp check` → Oxfmt + Oxlint + 型チェック)。
 
 ```sh
 mise install
 pnpm install
-pnpm run build      # bundle to dist/extension.cjs
-pnpm run test       # unit tests (parser, locator, input resolution)
-pnpm run check      # format + lint + types
-pnpm run package    # build a .vsix
+pnpm run build      # dist/extension.cjs にバンドル
+pnpm run test       # ユニットテスト(パーサー、ロケータ、入力パス解決)
+pnpm run check      # フォーマット + lint + 型
+pnpm run package    # .vsix を作成
 ```
 
-Press <kbd>F5</kbd> in VS Code to launch the Extension Development Host.
+VS Code で <kbd>F5</kbd> を押すと Extension Development Host が起動します。
 
-The parser tests run against `test/fixtures/sample/main.synctex(.gz)`, generated with
-`latexmk -pdf -synctex=1` from the `.tex` files in the same directory.
+パーサーのテストは `test/fixtures/sample/main.synctex(.gz)` に対して実行されます。このファイルは
+同じディレクトリの `.tex` から `latexmk -pdf -synctex=1` で生成したものです。
 
-## License
+## ライセンス
 
 MIT
